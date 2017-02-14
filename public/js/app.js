@@ -12046,6 +12046,7 @@ var app = {
 	listeners: function listeners() {
 		$(".btnAddToStock").on("click", this.addToStock);
 		$(".btnSubtractToStock").on("click", this.subtractToStock);
+		$(".btnCreateCandy").on("click", this.createCandy);
 	},
 
 	addToStock: function addToStock() {
@@ -12066,6 +12067,13 @@ var app = {
 
 	changeStockValue: function changeStockValue(value, id) {
 		$("#stock_" + id).html(value);
+	},
+
+	createCandy: function createCandy() {
+		axios.post('/api/createCandy', {
+			name: $("#nameInput").val(),
+			stock: $("#stockInput").val()
+		});
 	}
 };
 

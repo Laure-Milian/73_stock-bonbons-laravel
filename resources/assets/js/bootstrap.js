@@ -39,6 +39,7 @@ var app = {
 	listeners: function() {
 		$(".btnAddToStock").on("click", this.addToStock);
 		$(".btnSubtractToStock").on("click", this.subtractToStock);
+		$(".btnCreateCandy").on("click", this.createCandy);
 	},
 
 	addToStock : function() {
@@ -57,6 +58,13 @@ var app = {
 
 	changeStockValue : function(value, id) {
 		$("#stock_" + id).html(value);
+	},
+
+	createCandy : function() {
+		axios.post('/api/createCandy', {
+			name: $("#nameInput").val(),
+			stock: $("#stockInput").val()
+		});
 	}
 }
 

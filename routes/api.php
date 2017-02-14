@@ -35,3 +35,10 @@ Route::put('/subtractToStock/{id}', function($id) {
 	$candy->save();
 	return $candy->stock;
 });
+
+Route::post('/createCandy', function(Request $request) {
+	$new_candy = new Candy;
+	$new_candy->name = $request->name;
+	$new_candy->stock = $request->stock;
+	$new_candy->save();
+});

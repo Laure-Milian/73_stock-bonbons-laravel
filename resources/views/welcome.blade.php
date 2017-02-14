@@ -26,14 +26,14 @@
     <form action="">
         <div class="form-group">
             <label for="nom">Nom</label>
-            <input type="text">
+            <input id="nameInput" type="text">
         </div>
         <div class="form-group">
             <label for="stock">Stock</label>
-            <input type="number">
+            <input id="stockInput" type="number">
         </div>
         <div class="form-group">
-            <input type="submit">
+            <button class="btnCreateCandy" type="submit">Ajouter un nouveau bonbon dans la réserve</button>
         </div>
     </form>
   <script> window.Laravel = { csrfToken : "{{csrf_token()}}"}; </script>
