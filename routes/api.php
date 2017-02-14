@@ -29,13 +29,6 @@ Route::put('/changeStock/{action}/{id}', function($action, $id) {
 	return $candy->stock;
 });
 
-Route::put('/subtractToStock/{id}', function($id) {
-	$candy = Candy::findOrFail($id);
-	$candy->stock--;
-	$candy->save();
-	return $candy->stock;
-});
-
 Route::post('/createCandy', function(Request $request) {
 	$new_candy = new Candy;
 	$new_candy->name = $request->name;
