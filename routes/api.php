@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use App\Candy;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,4 +16,22 @@ use Illuminate\Http\Request;
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
+});
+
+Route::get('/candies', function() {
+	return response()->json(Candy::all());
+});
+
+Route::put('/changeStock/{action}/{id}', function($action, $id) {
+	$candy = Candy::findOrFail($id);
+	($action === "add") ? $candy->stock++ : $candy->stock-- ;
+	$candy->save();
+	return $candy->stock;
+});
+
+Route::put('/subtractToStock/{id}', function($id) {
+	$candy = Candy::findOrFail($id);
+	$candy->stock--;
+	$candy->save();
+	return $candy->stock;
 });

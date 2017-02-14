@@ -1,46 +1,63 @@
 
-window._ = require('lodash');
-
-/**
- * We'll load jQuery and the Bootstrap jQuery plugin which provides support
- * for JavaScript based Bootstrap features such as modals and tabs. This
- * code may be modified to fit the specific needs of your application.
- */
-
 window.$ = window.jQuery = require('jquery');
 
 require('bootstrap-sass');
 
-/**
- * Vue is a modern JavaScript library for building interactive web interfaces
- * using reactive data binding and reusable components. Vue's API is clean
- * and simple, leaving you to focus on building your next great project.
- */
-
-window.Vue = require('vue');
-
-/**
- * We'll load the axios HTTP library which allows us to easily issue requests
- * to our Laravel back-end. This library automatically handles sending the
- * CSRF token as a header based on the value of the "XSRF" token cookie.
- */
-
 window.axios = require('axios');
 
 window.axios.defaults.headers.common = {
-    'X-CSRF-TOKEN': window.Laravel.csrfToken,
-    'X-Requested-With': 'XMLHttpRequest'
+	'X-CSRF-TOKEN': window.Laravel.csrfToken,
+	'X-Requested-With': 'XMLHttpRequest'
 };
 
-/**
- * Echo exposes an expressive API for subscribing to channels and listening
- * for events that are broadcast by Laravel. Echo and event broadcasting
- * allows your team to easily build robust real-time web applications.
- */
+var app = {
+	
+	init: function() {
+		this.getData();
+	},
 
-// import Echo from "laravel-echo"
+	getData: function() {
+		axios.get("/api/candies")
+		.then( (response) => this.displayList(response.data) );
+	},
 
-// window.Echo = new Echo({
-//     broadcaster: 'pusher',
-//     key: 'your-pusher-key'
-// });
+	displayList: function(data) {	
+		let len = data.length;		
+		for (let i = 0; i < len; i++) {
+			$('#list').append(
+				'<tr>' + 
+				'<td>' + data[i].name + '</td>' +
+				'<td id="stock_' + data[i].id + '">' + data[i].stock + '</td>' +
+				'<td> <button data-id="' + data[i].id + '" class="btnAddToStock">Ajouter</button> </td>' +
+				'<td> <button data-id="' + data[i].id + '" class="btnSubtractToStock">Supprimer</button> </td>' +
+				'</tr>'
+				);
+		}
+		this.listeners();
+	},
+
+	listeners: function() {
+		$(".btnAddToStock").on("click", this.addToStock);
+		$(".btnSubtractToStock").on("click", this.subtractToStock);
+	},
+
+	addToStock : function() {
+		let id = $(this).data("id");
+		let action = "add";
+		axios.put("/api/changeStock/" + action + "/" + id)
+		.then( (response) => app.changeStockValue(response.data, id) );
+	},
+
+	subtractToStock : function() {
+		let id = $(this).data("id");
+		let action = "subtract";
+		axios.put("/api/changeStock/" + action + "/" + id)
+		.then( (response) => app.changeStockValue(response.data, id) );	
+	},
+
+	changeStockValue : function(value, id) {
+		$("#stock_" + id).html(value);
+	}
+}
+
+app.init();
